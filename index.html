@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Създаване на Интерактивно Портфолио</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Escape Room - За Габриела 🔐</title>
     <style>
         * {
             margin: 0;
@@ -12,156 +11,211 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --cream: #F5F1E8;
-            --brown: #8B5E3C;
-            --dark-brown: #5C3D2E;
-            --accent: #D4A574;
-            --text: #2C2416;
-            --soft-pink: #FFB6C1;
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a0a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        body {
-            font-family: 'Cormorant Garamond', serif;
-            background: var(--cream);
-            color: var(--text);
-            line-height: 1.7;
-            overflow-x: hidden;
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1000;
         }
 
         .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 40px;
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 60px;
-            min-height: 100vh;
-        }
-
-        /* Left Sidebar */
-        .sidebar {
+            max-width: 600px;
+            width: 90%;
+            padding: 20px;
             position: relative;
-            animation: slideInLeft 1s ease-out;
+            z-index: 10;
         }
 
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        .card {
+            background: rgba(20, 20, 20, 0.98);
+            border: 3px solid #00ff88;
+            padding: 40px 30px;
+            box-shadow: 
+                0 0 30px rgba(0, 255, 136, 0.5),
+                inset 0 0 50px rgba(0, 255, 136, 0.1);
+            position: relative;
+            overflow: hidden;
         }
 
-        .info-section {
-            background: white;
-            padding: 30px;
-            border-radius: 2px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #00ff88, #0088ff, #00ff88);
+            z-index: -1;
+            filter: blur(15px);
+            opacity: 0.4;
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.7; }
+        }
+
+        .header {
+            text-align: center;
             margin-bottom: 30px;
         }
 
-        .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 11px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--dark-brown);
-            margin-bottom: 20px;
-            font-weight: 600;
-            border-bottom: 1px solid var(--accent);
-            padding-bottom: 10px;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            font-size: 14px;
-            transition: transform 0.3s ease;
-        }
-
-        .contact-item:hover {
-            transform: translateX(5px);
-        }
-
-        .contact-item::before {
-            content: '→';
-            margin-right: 10px;
-            color: var(--brown);
-            font-weight: bold;
-        }
-
-        .skill-item {
-            font-size: 14px;
+        h1 {
+            color: #00ff88;
+            font-size: 2em;
             margin-bottom: 10px;
-            padding-left: 15px;
-            position: relative;
-            opacity: 0;
-            animation: fadeInUp 0.6s ease-out forwards;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.8);
         }
 
-        .skill-item:nth-child(1) { animation-delay: 0.1s; }
-        .skill-item:nth-child(2) { animation-delay: 0.2s; }
-        .skill-item:nth-child(3) { animation-delay: 0.3s; }
-        .skill-item:nth-child(4) { animation-delay: 0.4s; }
-        .skill-item:nth-child(5) { animation-delay: 0.5s; }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .subtitle {
+            color: #0088ff;
+            font-size: 0.9em;
+            letter-spacing: 2px;
         }
 
-        .skill-item::before {
-            content: '•';
-            position: absolute;
-            left: 0;
-            color: var(--brown);
+        .progress-container {
+            margin: 30px 0;
+            text-align: center;
         }
 
-        .step-item {
-            font-size: 13px;
-            margin-bottom: 12px;
-            padding: 8px 12px;
-            background: linear-gradient(to right, rgba(212,165,116,0.1) 0%, transparent 100%);
-            border-left: 2px solid var(--accent);
-            transition: all 0.3s ease;
+        .word-display {
+            font-size: 2.5em;
+            color: #00ff88;
+            letter-spacing: 12px;
+            margin: 20px 0;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
         }
 
-        .step-item:hover {
-            background: linear-gradient(to right, rgba(212,165,116,0.2) 0%, transparent 100%);
-            border-left-width: 4px;
-        }
-
-        .strength-item {
+        .word-display .letter {
             display: inline-block;
-            padding: 6px 14px;
-            margin: 4px;
-            background: var(--cream);
-            border-radius: 20px;
-            font-size: 12px;
-            transition: all 0.3s ease;
-            cursor: default;
+            width: 45px;
+            text-align: center;
         }
 
-        .strength-item:hover {
-            background: var(--accent);
-            color: white;
-            transform: scale(1.05);
+        .word-display .locked {
+            color: #333;
+            text-shadow: none;
         }
 
-        /* Main Content */
-        .main-content {
-            animation: fadeIn 1.2s ease-out;
+        .word-display .unlocked {
+            animation: letterReveal 0.5s;
+        }
+
+        @keyframes letterReveal {
+            0% {
+                transform: scale(0) rotate(180deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.5) rotate(0deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .progress-text {
+            color: #0088ff;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+
+        .puzzle-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .puzzle-box {
+            background: rgba(0, 136, 255, 0.1);
+            border: 2px solid #333;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .puzzle-box.active {
+            border-color: #0088ff;
+            background: rgba(0, 136, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 136, 255, 0.5);
+        }
+
+        .puzzle-box.solved {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.2);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .puzzle-box:hover:not(.solved) {
+            border-color: #0088ff;
+        }
+
+        .puzzle-letter {
+            font-size: 2.5em;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .puzzle-box.solved .puzzle-letter {
+            color: #00ff88;
+            text-shadow: 0 0 15px rgba(0, 255, 136, 0.8);
+        }
+
+        .puzzle-status {
+            color: #666;
+            font-size: 0.8em;
+        }
+
+        .puzzle-box.solved .puzzle-status {
+            color: #00ff88;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s;
         }
 
         @keyframes fadeIn {
@@ -169,301 +223,705 @@
             to { opacity: 1; }
         }
 
-        .header {
-            margin-bottom: 50px;
-            border-bottom: 3px solid var(--brown);
-            padding-bottom: 30px;
+        .modal-content {
+            background: rgba(20, 20, 20, 0.98);
+            border: 3px solid #0088ff;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 0 50px rgba(0, 136, 255, 0.8);
+            animation: slideUp 0.3s;
         }
 
-        .main-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 48px;
-            color: var(--brown);
-            letter-spacing: 4px;
-            text-transform: uppercase;
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            color: #00ff88;
+            font-size: 1.3em;
             margin-bottom: 20px;
-            font-weight: 700;
-            line-height: 1.2;
+            text-align: center;
         }
 
-        .subtitle {
-            font-size: 20px;
-            color: var(--dark-brown);
-            margin-bottom: 30px;
+        .question {
+            color: #e0e0e0;
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid #00ff88;
         }
 
-        .goal-section {
-            font-size: 16px;
-            color: var(--text);
+        .input-container {
+            margin: 25px 0;
+        }
+
+        .number-input {
+            width: 100%;
+            padding: 20px;
+            font-size: 2em;
+            text-align: center;
+            background: rgba(0, 136, 255, 0.1);
+            border: 3px solid #0088ff;
+            color: #00ff88;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 5px;
+        }
+
+        .number-input:focus {
+            outline: none;
+            border-color: #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .yes-no-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-yes-small, .btn-no-small {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border: 3px solid;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: transparent;
+        }
+
+        .btn-yes-small {
+            color: #00ff88;
+            border-color: #00ff88;
+        }
+
+        .btn-yes-small:hover {
+            background: #00ff88;
+            color: #000;
+        }
+
+        .btn-no-small {
+            color: #ff1493;
+            border-color: #ff1493;
+        }
+
+        .btn-no-small:hover {
+            background: #ff1493;
+            color: #000;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: transparent;
+            border: 2px solid #00ff88;
+            color: #00ff88;
+            font-size: 1.1em;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+
+        .submit-btn:hover {
+            background: #00ff88;
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.8);
+        }
+
+        .hint-btn {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: 1px solid #666;
+            color: #666;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .hint-btn:hover {
+            border-color: #00ff88;
+            color: #00ff88;
+        }
+
+        .hint {
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(0, 255, 136, 0.1);
+            border-left: 3px solid #00ff88;
+            color: #00ff88;
+            font-size: 0.9em;
+            display: none;
+        }
+
+        .hint.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        .error-message {
+            color: #ff1493;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9em;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: #666;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .close-modal:hover {
+            color: #ff1493;
+        }
+
+        .final-section {
+            display: none;
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        .final-section.active {
+            display: block;
+            animation: fadeIn 1s;
+        }
+
+        .final-section h2 {
+            color: #00ff88;
+            font-size: 2.5em;
+            margin: 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: glow 2s infinite;
+        }
+
+        .final-message {
+            color: #e0e0e0;
+            font-size: 1.2em;
+            margin: 20px 0;
             line-height: 1.8;
         }
 
-        .team-section {
-            margin-top: 60px;
+        .final-question {
+            font-size: 1.5em;
+            color: #0088ff;
+            margin: 30px 0;
+            font-weight: bold;
         }
 
-        .section-header {
-            font-family: 'Playfair Display', serif;
-            font-size: 32px;
-            letter-spacing: 2px;
+        .final-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 18px 50px;
+            font-size: 1.3em;
+            border: 3px solid;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
             text-transform: uppercase;
-            color: var(--dark-brown);
-            margin-bottom: 40px;
+            letter-spacing: 3px;
+            background: transparent;
+        }
+
+        .btn-yes {
+            color: #00ff88;
+            border-color: #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-yes:hover {
+            background: #00ff88;
+            color: #000;
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.8);
+        }
+
+        .btn-no {
+            color: #666;
+            border-color: #333;
             position: relative;
-            padding-bottom: 15px;
         }
 
-        .section-header::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100px;
-            height: 3px;
-            background: var(--accent);
-        }
-
-        .team-member {
-            background: white;
-            padding: 35px;
-            margin-bottom: 30px;
-            border-radius: 2px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.06);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            opacity: 0;
-            transform: translateY(20px);
-            animation: slideUp 0.6s ease-out forwards;
-        }
-
-        .team-member:nth-child(1) { animation-delay: 0.2s; }
-        .team-member:nth-child(2) { animation-delay: 0.4s; }
-        .team-member:nth-child(3) { animation-delay: 0.6s; }
-        .team-member:nth-child(4) { animation-delay: 0.8s; }
-
-        @keyframes slideUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .team-member:hover {
-            box-shadow: 0 15px 50px rgba(139,94,60,0.15);
-            transform: translateY(-5px);
-        }
-
-        .role {
-            font-family: 'Playfair Display', serif;
-            font-size: 13px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--brown);
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .name {
-            font-family: 'Playfair Display', serif;
-            font-size: 24px;
-            font-style: italic;
-            margin-bottom: 20px;
-            color: var(--dark-brown);
-        }
-
-        .responsibilities {
-            list-style: none;
-            margin-bottom: 20px;
-        }
-
-        .responsibilities li {
-            padding: 8px 0;
-            padding-left: 20px;
-            position: relative;
-            font-size: 15px;
-            transition: color 0.3s ease;
-        }
-
-        .responsibilities li::before {
-            content: '▪';
-            position: absolute;
-            left: 0;
-            color: var(--accent);
-            font-size: 18px;
-        }
-
-        .responsibilities li:hover {
-            color: var(--brown);
-        }
-
-        .qualities {
-            font-size: 14px;
-            color: var(--text);
-            font-style: italic;
-            border-top: 1px solid var(--cream);
-            padding-top: 15px;
-        }
-
-        .footer {
-            margin-top: 80px;
+        .celebration {
+            display: none;
             text-align: center;
-            padding: 40px;
-            background: white;
-            border-radius: 2px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.06);
         }
 
-        .footer-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 18px;
-            letter-spacing: 2px;
+        .celebration.active {
+            display: block;
+            animation: fadeIn 1s;
+        }
+
+        .celebration h2 {
+            color: #00ff88;
+            font-size: 3em;
+            margin: 30px 0;
             text-transform: uppercase;
-            margin-bottom: 10px;
-            color: var(--dark-brown);
+            animation: bounce 1s infinite;
         }
 
-        .footer-address {
-            font-size: 16px;
-            font-style: italic;
-            color: var(--brown);
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
         }
 
-        /* Decorative elements */
-        .decorative-line {
-            width: 100%;
-            height: 1px;
-            background: linear-gradient(to right, transparent, var(--accent), transparent);
-            margin: 40px 0;
+        .celebration p {
+            color: #e0e0e0;
+            font-size: 1.3em;
+            margin: 20px 0;
         }
 
-        @media (max-width: 968px) {
-            .container {
-                grid-template-columns: 1fr;
-                gap: 30px;
+        .emoji {
+            font-size: 4em;
+            margin: 20px 0;
+        }
+
+        .timer {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #0088ff;
+            font-size: 1.2em;
+            text-shadow: 0 0 10px rgba(0, 136, 255, 0.8);
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5em;
+                letter-spacing: 3px;
             }
 
-            .main-title {
-                font-size: 36px;
+            .word-display {
+                font-size: 1.8em;
+                letter-spacing: 6px;
             }
 
-            .section-header {
-                font-size: 26px;
+            .word-display .letter {
+                width: 30px;
+            }
+
+            .puzzle-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+
+            .puzzle-letter {
+                font-size: 2em;
+            }
+
+            .final-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .modal-content {
+                padding: 30px 20px;
             }
         }
     </style>
 </head>
 <body>
+    <div class="scanlines"></div>
+    
     <div class="container">
-        <!-- Left Sidebar -->
-        <aside class="sidebar">
-            <div class="info-section">
-                <h3 class="section-title">За Повече Информация:</h3>
-                <div class="contact-item">123-456-7890</div>
-                <div class="contact-item">hello@reallygreatsite.com</div>
-                <div class="contact-item">www.reallygreatsite.com</div>
+        <div class="card">
+            <div class="timer" id="timer">00:00</div>
+            
+            <div class="header">
+                <h1>🔐 ESCAPE ROOM 🔐</h1>
+                <div class="subtitle">ГАБРИЕЛА РАЛЕВА - 13.02.2025</div>
             </div>
 
-            <div class="info-section">
-                <h3 class="section-title">Възможни Рискове</h3>
-                <div class="skill-item">Технически затруднения</div>
-                <div class="skill-item">Промени в изискванията</div>
-                <div class="skill-item">Конфликт между екипа</div>
-                <div class="skill-item">Липса на време/забавяне</div>
+            <div class="progress-container">
+                <div class="word-display" id="wordDisplay">
+                    <span class="letter locked">V</span>
+                    <span class="letter locked">A</span>
+                    <span class="letter locked">L</span>
+                    <span class="letter locked">E</span>
+                    <span class="letter locked">N</span>
+                    <span class="letter locked">T</span>
+                    <span class="letter locked">I</span>
+                    <span class="letter locked">N</span>
+                    <span class="letter locked">E</span>
+                </div>
+                <div class="progress-text" id="progressText">Реши пъзелите за да unlock-неш думата!</div>
             </div>
 
-            <div class="info-section">
-                <h3 class="section-title">Етапи на Създаване</h3>
-                <div class="step-item">Анализ на съществуващи проекти</div>
-                <div class="step-item">Планиране на структура и дизайн</div>
-                <div class="step-item">Избиране на платформа за реализация и разработка</div>
-                <div class="step-item">Тестване и корекции</div>
-                <div class="step-item">Финализиране и публикуване</div>
-            </div>
-
-            <div class="info-section">
-                <h3 class="section-title">Нашите Силни Страни</h3>
-                <div>
-                    <span class="strength-item">Креативност</span>
-                    <span class="strength-item">Работа в екип</span>
-                    <span class="strength-item">Успешна комуникация</span>
-                    <span class="strength-item">Умения за решаване на проблеми</span>
-                    <span class="strength-item">Отговорност и мотивация за работа</span>
+            <div class="puzzle-grid" id="puzzleGrid">
+                <div class="puzzle-box" onclick="openPuzzle(0)">
+                    <div class="puzzle-letter">V</div>
+                    <div class="puzzle-status">🔒 LOCKED</div>
+                </div>
+                <div class="puzzle-box" onclick="openPuzzle(1)">
+                    <div class="puzzle-letter">A</div>
+                    <div class="puzzle-status">🔒 LOCKED</div>
+                </div>
+                <div class="puzzle-box" onclick="openPuzzle(2)">
+                    <div class="puzzle-letter">L</div>
+                    <div class="puzzle-status">🔒 LOCKED</div>
+                </div>
+                <div class="puzzle-box" onclick="openPuzzle(3)">
+                    <div class="puzzle-letter">E</div>
+                    <div class="puzzle-status">🔒 LOCKED</div>
+                </div>
+                <div class="puzzle-box" onclick="openPuzzle(4)">
+                    <div class="puzzle-letter">N</div>
+                    <div class="puzzle-status">🔒 LOCKED</div>
+                </div>
+                <div class="puzzle-box" onclick="openPuzzle(5)">
+                    <div class="puzzle-letter">T</div>
+                    <div class="puzzle-status">🔒 LOCKED</div>
+                </div>
+                <div class="puzzle-box" onclick="openPuzzle(6)">
+                    <div class="puzzle-letter">I</div>
+                    <div class="puzzle-status">🔒 LOCKED</div>
+                </div>
+                <div class="puzzle-box" onclick="openPuzzle(7)">
+                    <div class="puzzle-letter">N</div>
+                    <div class="puzzle-status">🔒 LOCKED</div>
+                </div>
+                <div class="puzzle-box" onclick="openPuzzle(8)">
+                    <div class="puzzle-letter">E</div>
+                    <div class="puzzle-status">🔒 LOCKED</div>
                 </div>
             </div>
-        </aside>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <header class="header">
-                <h1 class="main-title"> Интерактивно Портфолио</h1>
-                <h2 class="subtitle">Йоан Александров, Ивелин Иванов, Даниел Петров, Абдул Хан</h2>
-                <div class="goal-section">
-                    <strong>ЦЕЛ</strong><br><br>
-                    Запознайте се с нашия екип, идеите ни и резултатите от съвместната ни работа чрез нашето интерактивно портфолио.
+            <!-- Final Section -->
+            <div class="final-section" id="finalSection">
+                <div class="emoji">🎉</div>
+                <h2>ESCAPE COMPLETE!</h2>
+                <div class="final-message">
+                    <p>Браво, Габи! 🔓</p>
+                    <p>Unlock-на си всички букви!</p>
+                    <p>Сега идва истинският въпрос...</p>
                 </div>
-            </header>
-
-            <div class="decorative-line"></div>
-
-            <section class="team-section">
-                <h2 class="section-header">Членове на Екипа:</h2>
-
-                <div class="team-member">
-                    <div class="role">Мениджър и Разработчик</div>
-                    <div class="name">Йоан Александров</div>
-                    <ul class="responsibilities">
-                        <li>Планиране и организация на проекта</li>
-                        <li>Разпределяне на задачи и следене на срокове</li>
-                        <li>Анализ и управление на рисковете</li>
-                        <li>Работа със софтуер за управление на проекти (ProjectLibre)</li>
-                        <li>Техническа реализация на портфолиото</li>
-                        <li>Създаване на структура и функционалност</li>
-                        <li>Добавяне на интерактивни елементи и съдържание</li>
-                    </ul>
-                    <div class="qualities">Качества: лидерство, отговорност, добра комуникация, организираност, креативност, логическо мислене, прецизност и работа в екип</div>
+                <div class="final-question">
+                    Ще бъдеш ли моята VALENTINE? 💕
                 </div>
-
-                <div class="team-member">
-                    <div class="role">Мотиватор</div>
-                    <div class="name">Ивелин Иванов</div>
-                    <ul class="responsibilities">
-                        <li>Поддържане на позитивна атмосфера в екипа</li>
-                        <li>Мотивиране на членовете при трудности</li>
-                        <li>Следене за доброто настроение и продуктивност</li>
-                    </ul>
-                    <div class="qualities">Качества: ентусиазъм, емпатия, комуникативност и положителна енергия</div>
+                <div class="final-buttons">
+                    <button class="btn btn-yes" onclick="sayYes()">ДА! ❤️</button>
+                    <button class="btn btn-no" id="noBtn" onmouseover="moveButton()" ontouchstart="moveButton()">НЕ</button>
                 </div>
+            </div>
 
-                <div class="team-member">
-                    <div class="role">Наблюдател</div>
-                    <div class="name">Даниел Петров</div>
-                    <ul class="responsibilities">
-                        <li>Наблюдение на процеса и идентифициране на проблеми</li>
-                        <li>Анализ на постигнатия прогрес</li>
-                        <li>Предоставяне на обективна обратна връзка</li>
-                    </ul>
-                    <div class="qualities">Качества: аналитичност, внимание към детайли, обективност и критично мислене</div>
-                </div>
-
-                <div class="team-member">
-                    <div class="role">Дизайнер</div>
-                    <div class="name">Абдул Хан</div>
-                    <ul class="responsibilities">
-                        <li>Създаване на цялостната визия на портфолиото</li>
-                        <li>Избор на цветове, шрифтове и оформление</li>
-                        <li>Грижи се за удобството на проекта</li>
-                    </ul>
-                    <div class="qualities">Качества: креативност, усет към детайла, естетика, иновативност, добра комуникация, работа в екип</div>
-                </div>
-            </section>
-
-            <div class="decorative-line"></div>
-
-            <footer class="footer">
-                <div class="footer-title">Екип:</div>
-                <div class="footer-address">Йоан Александров, Ивелин Иванов, Даниел Петров, Абдул Хан</div>
-                <div class="footer-address" style="margin-top: 15px;">12в, ПМГ „Атанас Радев"</div>
-            </footer>
-        </main>
+            <!-- Celebration -->
+            <div class="celebration" id="celebration">
+                <div class="emoji">🎊💖🎊</div>
+                <h2>АЙДЕЕЕ!</h2>
+                <p>Знаех си, че ще го решиш! 😄</p>
+                <p>Утре купон за Свети Валентин! 🔥</p>
+                <div class="emoji">✨❤️✨</div>
+            </div>
+        </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">✕</span>
+            <div class="modal-header" id="modalHeader">БУКВА: V</div>
+            <div class="question" id="modalQuestion"></div>
+            <div class="input-container">
+                <input type="number" class="number-input" id="answerInput" placeholder="?" inputmode="numeric">
+                <div class="yes-no-buttons" id="yesNoButtons" style="display: none;">
+                    <button class="btn-yes-small" onclick="submitYesNoAnswer(true)">ДА</button>
+                    <button class="btn-no-small" onclick="submitYesNoAnswer(false)">НЕ</button>
+                </div>
+            </div>
+            <button class="submit-btn" id="submitBtn" onclick="submitAnswer()">UNLOCK</button>
+            <div class="hint" id="modalHint"></div>
+            <div class="error-message" id="errorMessage">❌ Грешен отговор! Опитай пак.</div>
+        </div>
+    </div>
+
+    <script>
+        // Puzzles Configuration
+        const puzzles = [
+            {
+                letter: 'V',
+                question: 'От коя ДАТА сме заедно? (само числото от месеца)',
+                answer: 8,
+                hint: ''
+            },
+            {
+                letter: 'A',
+                question: 'Колко е сборът на ВСИЧКИ цифри от номерата на нашите коли?',
+                answer: 44,
+                hint: ''
+            },
+            {
+                letter: 'L',
+                question: 'Колко е сборът на ВСИЧКИ цифри от нашите телефонни номера?',
+                answer: 75,
+                hint: ''
+            },
+            {
+                letter: 'E',
+                question: 'Колко пъти е споменато името "Gabriela" в Epstein файловете?',
+                answer: 40,
+                hint: ''
+            },
+            {
+                letter: 'N',
+                question: 'Колко е сборът на буквите от нашите прякори в детската градина?',
+                answer: 19,
+                hint: ''
+            },
+            {
+                letter: 'T',
+                question: '.... --- .-- / -- .- -. -.-- / .-.. . - - . .-. ... / .- .-. . / - .... . .-. . / .. -. / - .... . / -. .- -- . / -.. --- .-. .- / .. .-.. .. . ...- .- ..--.. (отговорът е число)',
+                answer: 10,
+                hint: ''
+            },
+            {
+                letter: 'I',
+                question: 'Колко пъти пиянката от Козарево ни каза „Недей би камбаната"?',
+                answer: 0,
+                hint: ''
+            },
+            {
+                letter: 'N',
+                question: 'Колко дълго е изпълнението на Фики в секунди?',
+                answer: 178,
+                hint: ''
+            },
+            {
+                letter: 'E',
+                question: 'Емануела ли ти е любимата изпълнителка?',
+                answer: 'yes_no', // Special type for Yes/No question
+                hint: ''
+            }
+        ];
+
+        let currentPuzzleIndex = 0;
+        let solvedCount = 0;
+        let startTime = Date.now();
+        let timerInterval;
+        let solvedPuzzles = new Array(9).fill(false);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            startTimer();
+        });
+
+        function openPuzzle(index) {
+            if (solvedPuzzles[index]) return; // Already solved
+            
+            currentPuzzleIndex = index;
+            const puzzle = puzzles[index];
+            
+            document.getElementById('modalHeader').textContent = `БУКВА: ${puzzle.letter}`;
+            document.getElementById('modalQuestion').textContent = puzzle.question;
+            document.getElementById('modalHint').textContent = puzzle.hint;
+            document.getElementById('modalHint').classList.remove('show');
+            document.getElementById('answerInput').value = '';
+            document.getElementById('errorMessage').classList.remove('show');
+            
+            // Check if this is the Emanuela Yes/No question
+            if (puzzle.answer === 'yes_no') {
+                document.getElementById('answerInput').style.display = 'none';
+                document.getElementById('submitBtn').style.display = 'none';
+                document.getElementById('yesNoButtons').style.display = 'flex';
+            } else {
+                document.getElementById('answerInput').style.display = 'block';
+                document.getElementById('submitBtn').style.display = 'block';
+                document.getElementById('yesNoButtons').style.display = 'none';
+            }
+            
+            document.getElementById('modal').classList.add('active');
+            if (puzzle.answer !== 'yes_no') {
+                setTimeout(() => document.getElementById('answerInput').focus(), 100);
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        function submitYesNoAnswer(answer) {
+            // For Emanuela question, any answer triggers the final Valentine question
+            solvedPuzzles[currentPuzzleIndex] = true;
+            solvedCount++;
+            
+            // Update puzzle box
+            const boxes = document.querySelectorAll('.puzzle-box');
+            boxes[currentPuzzleIndex].classList.add('solved');
+            boxes[currentPuzzleIndex].querySelector('.puzzle-status').textContent = '✓ SOLVED';
+            
+            // Unlock letter
+            const letters = document.querySelectorAll('.word-display .letter');
+            letters[currentPuzzleIndex].classList.remove('locked');
+            letters[currentPuzzleIndex].classList.add('unlocked');
+            
+            closeModal();
+            
+            // Immediately jump to final section regardless of other puzzles
+            setTimeout(() => {
+                stopTimer();
+                document.getElementById('puzzleGrid').style.display = 'none';
+                document.getElementById('progressText').textContent = '🎉 ЕМАНУЕЛА ОДОБРЯВА! 🎉';
+                document.getElementById('finalSection').classList.add('active');
+            }, 500);
+        }
+
+        function submitAnswer() {
+            const input = document.getElementById('answerInput');
+            const answer = parseInt(input.value);
+            const puzzle = puzzles[currentPuzzleIndex];
+            
+            if (answer === puzzle.answer) {
+                // Correct!
+                solvedPuzzles[currentPuzzleIndex] = true;
+                solvedCount++;
+                
+                // Update puzzle box
+                const boxes = document.querySelectorAll('.puzzle-box');
+                boxes[currentPuzzleIndex].classList.add('solved');
+                boxes[currentPuzzleIndex].querySelector('.puzzle-status').textContent = '✓ SOLVED';
+                
+                // Unlock letter
+                const letters = document.querySelectorAll('.word-display .letter');
+                letters[currentPuzzleIndex].classList.remove('locked');
+                letters[currentPuzzleIndex].classList.add('unlocked');
+                
+                closeModal();
+                
+                // Check if all solved
+                if (solvedCount === 9) {
+                    setTimeout(() => {
+                        stopTimer();
+                        document.getElementById('puzzleGrid').style.display = 'none';
+                        document.getElementById('progressText').textContent = '🎉 ALL UNLOCKED! 🎉';
+                        document.getElementById('finalSection').classList.add('active');
+                    }, 1000);
+                }
+            } else {
+                // Wrong answer
+                const errorMsg = document.getElementById('errorMessage');
+                errorMsg.classList.remove('show');
+                setTimeout(() => errorMsg.classList.add('show'), 10);
+                input.value = '';
+            }
+        }
+
+        function showHint() {
+            document.getElementById('modalHint').classList.add('show');
+        }
+
+        // Allow Enter key to submit
+        document.getElementById('answerInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitAnswer();
+            }
+        });
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+                const seconds = (elapsed % 60).toString().padStart(2, '0');
+                document.getElementById('timer').textContent = `${minutes}:${seconds}`;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        let moveCount = 0;
+        function moveButton() {
+            const btn = document.getElementById('noBtn');
+            const card = document.querySelector('.card');
+            
+            moveCount++;
+            
+            const texts = ['СИГУРНА?', 'ЕЙ!', 'ДАЙ ШАНС!', 'МОЛЯЯЯ 🥺', 'ДА КАЖИ!'];
+            btn.textContent = texts[Math.min(moveCount - 1, texts.length - 1)];
+            
+            const maxX = card.offsetWidth - btn.offsetWidth - 60;
+            const maxY = card.offsetHeight - btn.offsetHeight - 60;
+            
+            btn.style.position = 'absolute';
+            btn.style.left = (Math.random() * maxX) + 'px';
+            btn.style.top = (Math.random() * maxY) + 'px';
+        }
+
+        function sayYes() {
+            document.getElementById('finalSection').style.display = 'none';
+            document.getElementById('celebration').classList.add('active');
+            
+            // Confetti effect
+            for (let i = 0; i < 150; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.style.position = 'fixed';
+                    confetti.style.width = '10px';
+                    confetti.style.height = '10px';
+                    confetti.style.background = ['#00ff88', '#0088ff', '#ff1493'][Math.floor(Math.random() * 3)];
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = '-10px';
+                    confetti.style.animation = 'fall 3s linear';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 30);
+            }
+        }
+
+        // Add confetti animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fall {
+                to {
+                    transform: translateY(100vh) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>
