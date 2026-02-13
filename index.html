@@ -175,8 +175,18 @@
             box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
         }
 
-        .puzzle-box:hover:not(.solved) {
+        .puzzle-box:hover:not(.solved):not(.blocked) {
             border-color: #0088ff;
+        }
+
+        .puzzle-box.blocked {
+            cursor: not-allowed;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .puzzle-box.blocked .puzzle-letter {
+            filter: blur(2px);
         }
 
         .puzzle-letter {
@@ -650,9 +660,6 @@
             <!-- Celebration -->
             <div class="celebration" id="celebration">
                 <div class="emoji">🎊💖🎊</div>
-                <h2>АЙДЕЕЕ!</h2>
-                <p>Знаех си, че ще го решиш! 😄</p>
-                <p>Утре купон за Свети Валентин! 🔥</p>
                 <div class="emoji">✨❤️✨</div>
             </div>
         </div>
@@ -724,7 +731,7 @@
             },
             {
                 letter: 'N',
-                question: 'Колко дълго е изпълнението на Фики в секунди?',
+                question: 'Колко дълго е изпълнението на Фики в Евровизия в секунди?',
                 answer: 178,
                 hint: ''
             },
@@ -741,14 +748,31 @@
         let startTime = Date.now();
         let timerInterval;
         let solvedPuzzles = new Array(9).fill(false);
+        let emanuelaModalStage = 'emanuela'; // 'emanuela' | 'valentine'
+
+        function updateBlockedBoxes() {
+            const boxes = document.querySelectorAll('.puzzle-box');
+            boxes.forEach((box, index) => {
+                if (solvedPuzzles[index]) {
+                    box.classList.remove('blocked');
+                } else if (index > 0 && !solvedPuzzles[index - 1]) {
+                    box.classList.add('blocked');
+                } else {
+                    box.classList.remove('blocked');
+                }
+            });
+        }
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             startTimer();
+            updateBlockedBoxes();
         });
 
         function openPuzzle(index) {
             if (solvedPuzzles[index]) return; // Already solved
+            // Can only open if previous puzzle is solved (or it's the first one)
+            if (index > 0 && !solvedPuzzles[index - 1]) return;
             
             currentPuzzleIndex = index;
             const puzzle = puzzles[index];
@@ -762,6 +786,7 @@
             
             // Check if this is the Emanuela Yes/No question
             if (puzzle.answer === 'yes_no') {
+                emanuelaModalStage = 'emanuela';
                 document.getElementById('answerInput').style.display = 'none';
                 document.getElementById('submitBtn').style.display = 'none';
                 document.getElementById('yesNoButtons').style.display = 'flex';
@@ -782,23 +807,66 @@
         }
 
         function submitYesNoAnswer(answer) {
-            // For Emanuela question, any answer triggers the final Valentine question
+            if (emanuelaModalStage === 'emanuela') {
+                // First question: Emanuela
+                if (answer) {
+                    // She said ДА - смени въпроса и покажи че е натиснала ДА на валентинката
+                    emanuelaModalStage = 'valentine';
+                    document.getElementById('modalHeader').textContent = '💕';
+                    document.getElementById('modalQuestion').textContent = 'Ще ми бъдеш ли валентинка?';
+                    document.getElementById('yesNoButtons').innerHTML = '<span style="color:#00ff88;font-size:1.5em;text-shadow:0 0 15px rgba(0,255,136,0.8);">ДА! ❤️</span>';
+                    document.getElementById('yesNoButtons').style.pointerEvents = 'none';
+                    setTimeout(() => finishEmanuelaAndGoToCelebration(), 1500);
+                } else {
+                    finishEmanuelaAndShowFinal();
+                }
+            } else {
+                if (answer) {
+                    finishEmanuelaAndGoToCelebration();
+                } else {
+                    finishEmanuelaAndShowFinal();
+                }
+            }
+        }
+
+        function finishEmanuelaAndGoToCelebration() {
             solvedPuzzles[currentPuzzleIndex] = true;
             solvedCount++;
             
-            // Update puzzle box
             const boxes = document.querySelectorAll('.puzzle-box');
             boxes[currentPuzzleIndex].classList.add('solved');
             boxes[currentPuzzleIndex].querySelector('.puzzle-status').textContent = '✓ SOLVED';
             
-            // Unlock letter
             const letters = document.querySelectorAll('.word-display .letter');
             letters[currentPuzzleIndex].classList.remove('locked');
             letters[currentPuzzleIndex].classList.add('unlocked');
             
             closeModal();
+            updateBlockedBoxes();
             
-            // Immediately jump to final section regardless of other puzzles
+            stopTimer();
+            document.getElementById('puzzleGrid').style.display = 'none';
+            document.getElementById('progressText').textContent = '🎉 ЕМАНУЕЛА ОДОБРЯВА! 🎉';
+            document.getElementById('finalSection').style.display = 'none';
+            document.getElementById('celebration').classList.add('active');
+            sayYes();
+        }
+
+        function finishEmanuelaAndShowFinal() {
+            solvedPuzzles[currentPuzzleIndex] = true;
+            solvedCount++;
+            
+            const boxes = document.querySelectorAll('.puzzle-box');
+            boxes[currentPuzzleIndex].classList.add('solved');
+            boxes[currentPuzzleIndex].querySelector('.puzzle-status').textContent = '✓ SOLVED';
+            
+            const letters = document.querySelectorAll('.word-display .letter');
+            letters[currentPuzzleIndex].classList.remove('locked');
+            letters[currentPuzzleIndex].classList.add('unlocked');
+            
+            closeModal();
+            updateBlockedBoxes();
+            
             setTimeout(() => {
                 stopTimer();
                 document.getElementById('puzzleGrid').style.display = 'none';
@@ -828,6 +896,7 @@
                 letters[currentPuzzleIndex].classList.add('unlocked');
                 
                 closeModal();
+                updateBlockedBoxes();
                 
                 // Check if all solved
                 if (solvedCount === 9) {
